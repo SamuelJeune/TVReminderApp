@@ -1,6 +1,7 @@
 package com.example.sam.tvreminderapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -17,30 +18,26 @@ public class searchResultViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewView;
         private TextView yearTextView;
-        private View.OnClickListener onClickListener;
 
         public searchResultViewHolder(View itemView) {
             super(itemView);
-            
-            onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(view.getContext(), "Yo nigga !", Toast.LENGTH_LONG).show();
-                }
-            };
 
-            itemView.setOnClickListener(onClickListener);
             textViewView = itemView.findViewById(R.id.textview);
             yearTextView = itemView.findViewById(R.id.yeartextview);
         }
 
-        public void bind(JSONObject myObject){
+        public void bind(final JSONObject myObject, final searchResultAdapter.OnItemClickListener listener){
             try {
                 textViewView.setText(myObject.getString("Title"));
                 yearTextView.setText(myObject.getString("Year"));
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        listener.onItemClick(myObject);
+                    }
+                });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-    }
+ }
 

@@ -1,20 +1,22 @@
 package com.example.sam.tvreminderapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Search extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -52,9 +54,9 @@ public class Search extends AppCompatActivity implements SearchView.OnQueryTextL
 
     public void search(String searchQuery, final Context context) {
         final JSONArray jsonArray;
-        String url = "http://www.omdbapi.com/?i=tt3896198&apikey=31595ce6";
+
         final RecyclerView recyclerView = findViewById(R.id.myRecyclerView);
-        OMDBApiConnection.getJsonArray(searchQuery, context, url, new OMDBApiConnection.VolleyCallback() {
+        OMDBApiConnection.getJsonArray(searchQuery, context, new OMDBApiConnection.VolleyCallbackArray() {
             @Override
             public JSONArray onSuccess(JSONArray result) {
 
@@ -66,7 +68,17 @@ public class Search extends AppCompatActivity implements SearchView.OnQueryTextL
 
                 //puis créer un MyAdapter, lui fournir notre liste de villes.
                 //cet adapter servira à remplir notre recyclerview
-                recyclerView.setAdapter(new searchResultAdapter(result));
+                recyclerView.setAdapter(new searchResultAdapter(result, new searchResultAdapter.OnItemClickListener() {
+                    @Override public void onItemClick(JSONObject item) {
+                        try {
+                            Toast.makeText(getApplicationContext(), "Item Clicked "+item.getString("Title"), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), MovieDetailActivity.class);
+                            intent.putExtra("MOVIE_ID", item.getString("imdbID"));
+                            startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }}));
                 return result;
             }
         });
