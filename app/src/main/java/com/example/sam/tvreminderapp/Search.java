@@ -23,7 +23,7 @@ public class Search extends AppCompatActivity implements SearchView.OnQueryTextL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        SearchView searchView = (SearchView) findViewById(R.id.searchView); // inititate a search view
+        SearchView searchView = findViewById(R.id.searchView); // inititate a search view
         searchView.setOnQueryTextListener(this);
 
 
@@ -53,7 +53,7 @@ public class Search extends AppCompatActivity implements SearchView.OnQueryTextL
     public void search(String searchQuery, final Context context) {
         final JSONArray jsonArray;
         String url = "http://www.omdbapi.com/?i=tt3896198&apikey=31595ce6";
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.myRecyclerView);
+        final RecyclerView recyclerView = findViewById(R.id.myRecyclerView);
         OMDBApiConnection.getJsonArray(searchQuery, context, url, new OMDBApiConnection.VolleyCallback() {
             @Override
             public JSONArray onSuccess(JSONArray result) {
