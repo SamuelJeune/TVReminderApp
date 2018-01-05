@@ -14,20 +14,19 @@ import org.json.JSONObject;
 public class searchResultViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewView;
+        private TextView yearTextView;
 
-        //itemView est la vue correspondante à 1 cellule
         public searchResultViewHolder(View itemView) {
             super(itemView);
-
-            //c'est ici que l'on fait nos findView
-
             textViewView = (TextView) itemView.findViewById(R.id.textview);
+            yearTextView = itemView.findViewById(R.id.yeartextview);
         }
 
         //puis ajouter une fonction pour remplir la cellule en fonction d'un MyObject
         public void bind(JSONObject myObject){
             try {
                 textViewView.setText(myObject.getString("Title"));
+                yearTextView.setText(myObject.getString("Year"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -10,13 +10,21 @@
          pour avoir une organisation verticale nous devons
          donc rajouter un LinearLayout -->
 
-        <TextView
-            android:id="@+id/textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:padding="20dp"
-            android:textColor="#333"
-            android:textSize="18sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:paddingLeft="20dp"
+        android:text="Title"
+        android:textColor="#333"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/yeartextview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="Year" />
+</LinearLayout>
 

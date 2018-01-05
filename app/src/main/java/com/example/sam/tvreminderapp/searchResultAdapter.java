@@ -20,7 +20,6 @@ public class searchResultAdapter extends RecyclerView.Adapter<searchResultViewHo
 
         List<JSONObject> list;
 
-        //ajouter un constructeur prenant en entrée une liste
         public searchResultAdapter(JSONArray jsonArray) {
             list = new ArrayList<>();
             for(int i=0; i<jsonArray.length(); i++) {
@@ -32,15 +31,13 @@ public class searchResultAdapter extends RecyclerView.Adapter<searchResultViewHo
             }
         }
 
-        //cette fonction permet de créer les viewHolder
-        //et par la même indiquer la vue à inflater (à partir des layout xml)
         @Override
         public searchResultViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.listview_item,viewGroup,false);
             return new searchResultViewHolder(view);
         }
 
-        //c'est ici que nous allons remplir notre cellule avec le texte/image de chaque MyObjects
+
         @Override
         public void onBindViewHolder(searchResultViewHolder myViewHolder, int position) {
             JSONObject myObject = list.get(position);
