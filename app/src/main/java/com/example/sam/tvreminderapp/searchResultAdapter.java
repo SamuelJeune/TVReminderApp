@@ -18,7 +18,7 @@ import java.util.List;
 
 public class searchResultAdapter extends RecyclerView.Adapter<searchResultViewHolder> {
 
-        List<JSONObject> list;
+        private List<JSONObject> list;
 
         //ajouter un constructeur prenant en entrée une liste
         public searchResultAdapter(JSONArray jsonArray) {
