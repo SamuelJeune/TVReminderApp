@@ -130,7 +130,7 @@ public class MovieDB extends TableObject {
         return movie;
     }
 
-    public ArrayList<Movie> fillList(ArrayList<Movie> list) {
+    public ArrayList<Movie> allMovies(ArrayList<Movie> list) {
         //Lecture
         mDb = this.read();
 

@@ -1,10 +1,11 @@
-package com.example.sam.tvreminderapp;
+package com.example.sam.tvreminderapp.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.sam.tvreminderapp.Activity.Home;
+import com.example.sam.tvreminderapp.R;
 
 public class MainActivity extends AppCompatActivity {
 

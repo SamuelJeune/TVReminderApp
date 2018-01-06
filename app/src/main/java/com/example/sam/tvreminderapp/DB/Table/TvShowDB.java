@@ -130,7 +130,7 @@ public class TvShowDB extends TableObject {
         return tvShow;
     }
 
-    public ArrayList<TvShow> fillList(ArrayList<TvShow> list) {
+    public ArrayList<TvShow> allTvShows(ArrayList<TvShow> list) {
         //Lecture
         mDb = this.read();
 
