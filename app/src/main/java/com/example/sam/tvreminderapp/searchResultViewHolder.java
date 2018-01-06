@@ -21,7 +21,7 @@ public class searchResultViewHolder extends RecyclerView.ViewHolder{
 
         public searchResultViewHolder(View itemView) {
             super(itemView);
-            
+
             onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
