@@ -1,16 +1,13 @@
 package com.example.sam.tvreminderapp;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -23,8 +20,9 @@ import org.json.JSONObject;
 
 public class OMDBApiConnection {
 
+    static String url = "http://www.omdbapi.com/?&apikey=31595ce6";
 
-        protected static void getJsonArray(String searchQuery, Context context, String url, final VolleyCallback callback){
+        protected static void getJsonArray(String searchQuery, Context context, final VolleyCallbackArray callback){
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -76,9 +74,51 @@ public class OMDBApiConnection {
             queue.add(jsonArrayRequest);
     }
 
+    public static void getMovieById(String movieId, Context context, final VolleyCallbackObject callback){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(context);
 
-    interface VolleyCallback {
+        // Request a string response from the provided URL.
+        String query = url + "&i=" + movieId;
+        Log.d("movie Id : ", query);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                query,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Do something with response
+                        //mTextView.setText(response.toString());
+
+                        // Process the JSON
+                        // Loop through the array elements
+                        JSONObject movieObject = response;
+                        Log.d("movie Object : ", movieObject.toString());
+                        callback.onSuccess(movieObject);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Do something when error occurred
+                        Log.d("err", error.getMessage());
+                    }
+                }
+        );
+
+        queue.add(jsonObjectRequest);
+    }
+
+
+
+    interface VolleyCallbackArray {
         JSONArray onSuccess(JSONArray result);
+    }
+
+    interface VolleyCallbackObject {
+        JSONObject onSuccess(JSONObject result);
     }
 }
 
