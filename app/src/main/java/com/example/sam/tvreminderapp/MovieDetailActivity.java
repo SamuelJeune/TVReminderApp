@@ -30,11 +30,21 @@ public class MovieDetailActivity extends AppCompatActivity {
                 ImageView posterView = findViewById(R.id.posterView);
                 TextView yearTextView = findViewById(R.id.yeartextview);
                 TextView directorTextView = findViewById(R.id.directortextview);
+                TextView genreTextView = findViewById(R.id.genretextView);
+                TextView countryTextView = findViewById(R.id.countrytextView);
+                TextView imdbTextView = findViewById(R.id.imdbtextView);
+                TextView actorTextView = findViewById(R.id.actortextView);
+                TextView descriptionTextView = findViewById(R.id.descriptiontextView);
                 try {
                     titleTextView.setText(result.getString("Title"));
                     Picasso.with(getApplicationContext()).load(result.getString("Poster")).into(posterView);
                     yearTextView.setText(result.getString("Year"));
                     directorTextView.setText(result.getString("Director"));
+                    genreTextView.setText(result.getString("Genre"));
+                    countryTextView.setText(result.getString("Country"));
+                    imdbTextView.setText("IMDB score : "+result.getString("imdbRating"));
+                    actorTextView.setText(result.getString("Actors"));
+                    descriptionTextView.setText(result.getString("Plot"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
