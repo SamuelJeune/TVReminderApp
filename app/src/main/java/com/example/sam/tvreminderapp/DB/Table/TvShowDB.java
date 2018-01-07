@@ -22,7 +22,7 @@ public class TvShowDB extends TableObject {
     public static final String YEAR = "year";
     public static final String NUMBER_OF_SEASONS = "nb_season";
 
-    public static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + KEY + " INTEGER PRIMARY KEY UNIQUE, "
+    public static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
             + TITLE + " TEXT, "
             + YEAR + " INTEGER, "
             + NUMBER_OF_SEASONS + " INTEGER);";

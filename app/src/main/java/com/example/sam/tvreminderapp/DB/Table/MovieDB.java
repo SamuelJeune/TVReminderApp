@@ -21,11 +21,13 @@ public class MovieDB extends TableObject {
     public static final String TITLE = "title";
     public static final String YEAR = "year";
     public static final String DIRECTOR = "director";
+    public static final String SEEN = "seen";
 
-    public static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + KEY + " INTEGER PRIMARY KEY UNIQUE, "
+    public static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
             + TITLE + " TEXT, "
             + YEAR + " INTEGER, "
-            + DIRECTOR + " TEXT);";
+            + DIRECTOR + " TEXT, "
+            + SEEN + " INTEGER);";
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
@@ -72,12 +74,13 @@ public class MovieDB extends TableObject {
         }
     }
 
-    public long add(long id, String title, int year, String director) {
+    public long add(String title, int year, String director, int seen) {
+        long id;
         ContentValues value = new ContentValues();
-        value.put(KEY, id);
         value.put(TITLE, title);
         value.put(YEAR, year);
         value.put(DIRECTOR, director);
+        value.put(SEEN, seen);
         this.open();
 
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where title = '" + title + "' AND year = " + year, null);
@@ -124,7 +127,7 @@ public class MovieDB extends TableObject {
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where id = " + id, null);
 
         while (c.moveToNext()) {
-            movie = new Movie(c.getLong(0), c.getString(1), c.getInt(2), c.getString(3));
+            movie = new Movie(c.getLong(0), c.getString(1), c.getInt(2), c.getString(3), c.getInt(4) == 1);
         }
         c.close();
         return movie;
@@ -136,7 +139,7 @@ public class MovieDB extends TableObject {
 
         //Parcours
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME, null);
-        while (c.moveToNext()) { list.add(new Movie(c.getLong(0), c.getString(1), c.getInt(2), c.getString(3))); }
+        while (c.moveToNext()) { list.add(new Movie(c.getLong(0), c.getString(1), c.getInt(2), c.getString(3), c.getInt(4) == 1)); }
 
         //Fermeture flux
         c.close();

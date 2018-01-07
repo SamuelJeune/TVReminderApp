@@ -39,12 +39,13 @@ public class Handler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         for(int i = 0; i < listeTable.size(); i++) {
             //System.out.println(listeTable.get(i).toString());
-            if(db.getVersion() == 1) {
+            /*if(db.getVersion() == 1) {
                 listeTable.get(i).upgrade(2);
             }
-            else {
+            else {*/
+                //db.execSQL(listeTable.get(i).delete());
                 db.execSQL(listeTable.get(i).create());
-            }
+            //}
         }
     }
 

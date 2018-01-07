@@ -1,6 +1,7 @@
 package com.example.sam.tvreminderapp;
 
 import android.content.Intent;
+import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,14 +10,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sam.tvreminderapp.DB.Table.MovieDB;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLOutput;
+
 public class MovieDetailActivity extends AppCompatActivity {
 
+    private JSONObject informations;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +34,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         OMDBApiConnection.getMovieById(movieId, this, new OMDBApiConnection.VolleyCallbackObject() {
             @Override
             public JSONObject onSuccess(JSONObject result) {
+                informations = result;
                 TextView titleTextView = findViewById(R.id.titleView);
                 ImageView posterView = findViewById(R.id.posterView);
                 TextView yearTextView = findViewById(R.id.yeartextview);
@@ -59,14 +65,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         addToSeenListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onAddToSeenListButtonClicked();
+                onAddToListButtonClicked(1);
             }
         });
         final Button addToWishListButton = findViewById(R.id.addtowishbutton);
         addToWishListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onAddToWishListButtonClicked();
+                onAddToListButtonClicked(0);
             }
         });
 
@@ -74,13 +80,15 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
 
-    public void onAddToSeenListButtonClicked(){
-        Toast.makeText(getApplicationContext(), "Item added to seen list ", Toast.LENGTH_SHORT).show();
-        //TODO : add movie in database
-    }
+    public void onAddToListButtonClicked(int seen){
+        MovieDB movieDB = new MovieDB(this.getApplicationContext());
 
-    public void onAddToWishListButtonClicked(){
-        Toast.makeText(getApplicationContext(), "Item added to wish list ", Toast.LENGTH_SHORT).show();
-        //TODO : add movie in database
+        try {
+            long id = movieDB.add(informations.getString("Title"), informations.getInt("Year"), informations.getString("Director"), seen);
+            Toast.makeText(getApplicationContext(), "Item added to seen list, ID : " + id, Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            System.err.println("ERROR ADDING MOVIE !");
+            e.printStackTrace();
+        }
     }
 }

@@ -10,12 +10,14 @@ public class Movie {
     private String title;
     private int year;
     private String director;
+    private boolean seen;
 
-    public Movie(long id, String title, int year, String director) {
+    public Movie(long id, String title, int year, String director, boolean seen) {
         this.id = id;
         this.title = title;
         this.year = year;
         this.director = director;
+        this.seen = seen;
     }
 
     public long getId() {
@@ -48,5 +50,18 @@ public class Movie {
 
     public void setDirector(String director) {
         this.director = director;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie : Title : " + title + " & Year : " + year;
     }
 }
