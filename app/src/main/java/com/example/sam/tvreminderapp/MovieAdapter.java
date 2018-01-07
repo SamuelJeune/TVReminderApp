@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.example.sam.tvreminderapp.DB.Table.MovieDB;
 import com.example.sam.tvreminderapp.Object.Movie;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -17,9 +19,16 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder>  {
 
+    public interface OnItemClickListener {
+        void onItemClick(Movie item);
+    }
+
+    private OnItemClickListener listener;
+
     private ArrayList<Movie> listMovies = new ArrayList<>();
 
-    public MovieAdapter(Context context) {
+    public MovieAdapter(Context context, OnItemClickListener listener) {
+        this.listener = listener;
         MovieDB movieDB = new MovieDB(context);
         movieDB.allMovies(listMovies);
     }
@@ -32,7 +41,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder>  {
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-        holder.bind(listMovies.get(position));
+        holder.bind(listMovies.get(position), listener);
     }
 
     @Override

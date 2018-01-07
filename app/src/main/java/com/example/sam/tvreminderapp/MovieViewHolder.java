@@ -32,10 +32,14 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
         descriptionView = itemView.findViewById(R.id.description_item);
     }
 
-    public void bind(Movie movie) {
+    public void bind(final Movie movie, final MovieAdapter.OnItemClickListener listener) {
         textViewView.setText(movie.getTitle());
         yearTextView.setText(String.valueOf(movie.getYear()));
-
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                listener.onItemClick(movie);
+            }
+        });
         OMDBApiConnection.getMovieById(movie.getIdOMDB(), view.getContext(), new OMDBApiConnection.VolleyCallbackObject() {
             @Override
             public JSONObject onSuccess(JSONObject result) {

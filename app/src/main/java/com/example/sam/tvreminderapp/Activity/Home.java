@@ -20,12 +20,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sam.tvreminderapp.DB.Table.MovieDB;
 import com.example.sam.tvreminderapp.MovieAdapter;
+import com.example.sam.tvreminderapp.MovieDetailActivity;
 import com.example.sam.tvreminderapp.Object.Movie;
 import com.example.sam.tvreminderapp.R;
 import com.example.sam.tvreminderapp.Search;
+import com.example.sam.tvreminderapp.searchResultAdapter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -137,7 +143,13 @@ public class Home extends AppCompatActivity {
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
                 RecyclerView recyclerView = rootView.findViewById(R.id.movieRecyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(new MovieAdapter(getContext()));
+                recyclerView.setAdapter(new MovieAdapter(getContext(), new MovieAdapter.OnItemClickListener() {
+                    @Override public void onItemClick(Movie item) {
+                            Toast.makeText(getContext(), "Item Clicked "+item.getTitle(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+                            intent.putExtra("MOVIE_ID", item.getIdOMDB());
+                            startActivity(intent);
+                    }}));
             }
 
             return rootView;
