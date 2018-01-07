@@ -3,8 +3,11 @@ package com.example.sam.tvreminderapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -51,5 +54,33 @@ public class MovieDetailActivity extends AppCompatActivity {
                 return result;
             }
         });
+
+        Button addToSeenListButton = findViewById(R.id.addtoseenbutton);
+        addToSeenListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddToSeenListButtonClicked();
+            }
+        });
+        final Button addToWishListButton = findViewById(R.id.addtowishbutton);
+        addToWishListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddToWishListButtonClicked();
+            }
+        });
+
+    }
+
+
+
+    public void onAddToSeenListButtonClicked(){
+        Toast.makeText(getApplicationContext(), "Item added to seen list ", Toast.LENGTH_SHORT).show();
+        //TODO : add movie in database
+    }
+
+    public void onAddToWishListButtonClicked(){
+        Toast.makeText(getApplicationContext(), "Item added to wish list ", Toast.LENGTH_SHORT).show();
+        //TODO : add movie in database
     }
 }
