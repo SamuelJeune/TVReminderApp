@@ -7,13 +7,15 @@ package com.example.sam.tvreminderapp.Object;
 public class Movie {
 
     private long id;
+    private String idOMDB;
     private String title;
     private int year;
     private String director;
     private boolean seen;
 
-    public Movie(long id, String title, int year, String director, boolean seen) {
+    public Movie(long id, String idOMDB, String title, int year, String director, boolean seen) {
         this.id = id;
+        this.idOMDB = idOMDB;
         this.title = title;
         this.year = year;
         this.director = director;
@@ -26,6 +28,14 @@ public class Movie {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getIdOMDB() {
+        return idOMDB;
+    }
+
+    public void setIdOMDB(String idOMDB) {
+        this.idOMDB = idOMDB;
     }
 
     public String getTitle() {

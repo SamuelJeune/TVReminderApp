@@ -18,12 +18,14 @@ import java.util.List;
 public class MovieDB extends TableObject {
     public static final String TABLE_NAME = "Movie";
     public static final String KEY = "id";
+    public static final String KEY_OMDB = "idOMDB";
     public static final String TITLE = "title";
     public static final String YEAR = "year";
     public static final String DIRECTOR = "director";
     public static final String SEEN = "seen";
 
     public static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+            + KEY_OMDB + " TEXT, "
             + TITLE + " TEXT, "
             + YEAR + " INTEGER, "
             + DIRECTOR + " TEXT, "
@@ -74,9 +76,10 @@ public class MovieDB extends TableObject {
         }
     }
 
-    public long add(String title, int year, String director, int seen) {
+    public long add(String idOMDB, String title, int year, String director, int seen) {
         long id;
         ContentValues value = new ContentValues();
+        value.put(KEY_OMDB, idOMDB);
         value.put(TITLE, title);
         value.put(YEAR, year);
         value.put(DIRECTOR, director);
@@ -127,7 +130,7 @@ public class MovieDB extends TableObject {
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where id = " + id, null);
 
         while (c.moveToNext()) {
-            movie = new Movie(c.getLong(0), c.getString(1), c.getInt(2), c.getString(3), c.getInt(4) == 1);
+            movie = new Movie(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getString(4), c.getInt(5) == 1);
         }
         c.close();
         return movie;
@@ -139,7 +142,7 @@ public class MovieDB extends TableObject {
 
         //Parcours
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME, null);
-        while (c.moveToNext()) { list.add(new Movie(c.getLong(0), c.getString(1), c.getInt(2), c.getString(3), c.getInt(4) == 1)); }
+        while (c.moveToNext()) { list.add(new Movie(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getString(4), c.getInt(5) == 1)); }
 
         //Fermeture flux
         c.close();

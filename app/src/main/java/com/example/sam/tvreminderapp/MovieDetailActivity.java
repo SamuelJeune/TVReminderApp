@@ -22,6 +22,7 @@ import java.sql.SQLOutput;
 public class MovieDetailActivity extends AppCompatActivity {
 
     private JSONObject informations;
+    private String movieId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        String movieId = intent.getStringExtra("MOVIE_ID");
+        movieId = intent.getStringExtra("MOVIE_ID");
 
         OMDBApiConnection.getMovieById(movieId, this, new OMDBApiConnection.VolleyCallbackObject() {
             @Override
@@ -84,7 +85,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         MovieDB movieDB = new MovieDB(this.getApplicationContext());
 
         try {
-            long id = movieDB.add(informations.getString("Title"), informations.getInt("Year"), informations.getString("Director"), seen);
+            long id = movieDB.add(movieId, informations.getString("Title"), informations.getInt("Year"), informations.getString("Director"), seen);
             Toast.makeText(getApplicationContext(), "Item added to seen list, ID : " + id, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             System.err.println("ERROR ADDING MOVIE !");
