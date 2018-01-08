@@ -18,6 +18,16 @@
         android:textStyle="bold"
         android:id="@+id/tvTitle" />
 
+    <ImageView
+        android:id="@+id/imgArrow"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_keyboard_arrow_up_black_18dp"/>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

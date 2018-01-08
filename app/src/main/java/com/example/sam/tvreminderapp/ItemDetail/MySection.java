@@ -3,6 +3,7 @@ package com.example.sam.tvreminderapp.ItemDetail;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sam.tvreminderapp.OMDBApiConnection;
@@ -27,6 +28,8 @@ class MySection extends StatelessSection {
     private List<JSONObject> list;
     private int season;
     private JSONArray jsonArray;
+    boolean expanded = true;
+    SectionedRecyclerViewAdapter sectionAdapter;
 
     public MySection(String movieId , int season, Context context, final SectionedRecyclerViewAdapter sectionAdapter) {
         // call constructor with layout resources for this Section header and items
@@ -35,6 +38,7 @@ class MySection extends StatelessSection {
                 .build());
         this.season=season;
         list = new ArrayList<>();
+        this.sectionAdapter = sectionAdapter;
 
         OMDBApiConnection.getSeasonDetail(movieId, season, context, new OMDBApiConnection.VolleyCallbackObject() {
             @Override
@@ -60,7 +64,7 @@ class MySection extends StatelessSection {
 
     @Override
     public int getContentItemsTotal() {
-        return list.size(); // number of items of this section
+        return expanded? list.size() : 0; // number of items of this section
     }
 
     @Override
@@ -88,17 +92,31 @@ class MySection extends StatelessSection {
 
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
-        HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
+        final HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.tvTitle.setText("Season "+season);
+        headerHolder.rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expanded = !expanded;
+                headerHolder.imgArrow.setImageResource(
+                        expanded ? R.drawable.ic_keyboard_arrow_up_black_18dp : R.drawable.ic_keyboard_arrow_down_black_18dp
+                );
+                sectionAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView tvTitle;
+        public View rootView;
+        private final ImageView imgArrow;
 
         HeaderViewHolder(View view) {
             super(view);
+            rootView = view;
             tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+            imgArrow = (ImageView) view.findViewById(R.id.imgArrow);
         }
     }
 }
