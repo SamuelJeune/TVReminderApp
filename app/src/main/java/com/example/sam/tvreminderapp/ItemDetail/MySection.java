@@ -1,9 +1,11 @@
 package com.example.sam.tvreminderapp.ItemDetail;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.sam.tvreminderapp.OMDBApiConnection;
 import com.example.sam.tvreminderapp.R;
 
 import org.json.JSONArray;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
 /**
@@ -21,23 +24,38 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
  */
 
 class MySection extends StatelessSection {
-    List<JSONObject> list;
-    String season;
+    private List<JSONObject> list;
+    private int season;
+    private JSONArray jsonArray;
 
-    public MySection(JSONArray jsonArray, String season) {
+    public MySection(String movieId , int season, Context context, final SectionedRecyclerViewAdapter sectionAdapter) {
         // call constructor with layout resources for this Section header and items
         super(new SectionParameters.Builder(R.layout.section_item)
                 .headerResourceId(R.layout.section_header)
                 .build());
         this.season=season;
         list = new ArrayList<>();
-        for(int i=0; i<jsonArray.length(); i++) {
-            try {
-                list.add(jsonArray.getJSONObject(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+        OMDBApiConnection.getSeasonDetail(movieId, season, context, new OMDBApiConnection.VolleyCallbackObject() {
+            @Override
+            public JSONObject onSuccess(JSONObject result) {
+                try {
+                    jsonArray= result.getJSONArray("Episodes");
+                    for(int i=0; i<jsonArray.length(); i++) {
+                        try {
+                            list.add(jsonArray.getJSONObject(i));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        sectionAdapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return result;
             }
-        }
+        });
+
     }
 
     @Override

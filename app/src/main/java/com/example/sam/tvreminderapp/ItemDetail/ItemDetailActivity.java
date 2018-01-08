@@ -104,7 +104,7 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     private void dysplaySerieInformation(String movieId, int totalSeasons) {
         Intent intent = new Intent(this, SeasonDetailActivity.class);
-        intent.putExtra("MOVIE_ID", movieId);
+        intent.putExtra("ITEM_ID", movieId);
         intent.putExtra("TOTAL_SEASON", totalSeasons);
         startActivity(intent);
     }
