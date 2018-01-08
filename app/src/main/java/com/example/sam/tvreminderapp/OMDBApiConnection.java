@@ -20,9 +20,9 @@ import org.json.JSONObject;
 
 public class OMDBApiConnection {
 
-    static String url = "http://www.omdbapi.com/?&apikey=31595ce6";
+    private static String url = "http://www.omdbapi.com/?&apikey=31595ce6";
 
-        protected static void getJsonArray(String searchQuery, Context context, final VolleyCallbackArray callback){
+    public static void getJsonArray(String searchQuery, Context context, final VolleyCallbackArray callback){
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -111,13 +111,46 @@ public class OMDBApiConnection {
         queue.add(jsonObjectRequest);
     }
 
+    public static void getSeasonDetail(String serieId, int seasonNumber, Context context , final VolleyCallbackObject callback){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        // Request a string response from the provided URL.
+        String query = url + "&i=" + serieId + "&Season=" + seasonNumber;
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                query,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Do something with response
+                        //mTextView.setText(response.toString());
+
+                        // Process the JSON
+                        // Loop through the array elements
+                        callback.onSuccess(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Do something when error occurred
+                        Log.d("err", error.getMessage());
+                    }
+                }
+        );
+
+        queue.add(jsonObjectRequest);
+    }
 
 
     interface VolleyCallbackArray {
         JSONArray onSuccess(JSONArray result);
     }
 
-    interface VolleyCallbackObject {
+    public interface VolleyCallbackObject {
         JSONObject onSuccess(JSONObject result);
     }
 }

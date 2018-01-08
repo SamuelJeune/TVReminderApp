@@ -19,21 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sam.tvreminderapp.DB.Table.MovieDB;
 import com.example.sam.tvreminderapp.MovieAdapter;
-import com.example.sam.tvreminderapp.MovieDetailActivity;
+import com.example.sam.tvreminderapp.MovieDetail.MovieDetailActivity;
 import com.example.sam.tvreminderapp.Object.Movie;
 import com.example.sam.tvreminderapp.R;
 import com.example.sam.tvreminderapp.Search;
-import com.example.sam.tvreminderapp.searchResultAdapter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class Home extends AppCompatActivity {
 

@@ -18,17 +18,20 @@ public class searchResultViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewView;
         private TextView yearTextView;
+        private TextView typeTextView;
 
         public searchResultViewHolder(View itemView) {
             super(itemView);
             textViewView = itemView.findViewById(R.id.textview);
             yearTextView = itemView.findViewById(R.id.yeartextview);
+            typeTextView = itemView.findViewById(R.id.typetextView);
         }
 
         public void bind(final JSONObject myObject, final searchResultAdapter.OnItemClickListener listener){
             try {
                 textViewView.setText(myObject.getString("Title"));
                 yearTextView.setText(myObject.getString("Year"));
+                typeTextView.setText(myObject.getString("Type"));
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         listener.onItemClick(myObject);

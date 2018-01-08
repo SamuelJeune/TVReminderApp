@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="wrap_content">
 
-        <!-- Les CardView agissent comme des FrameLayout,
-         pour avoir une organisation verticale nous devons
-         donc rajouter un LinearLayout -->
+
+    <LinearLayout
+        android:id="@+id/movielistitemlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:maxWidth="250dp"
+            android:paddingLeft="20dp"
+            android:text="Title"
+            android:textColor="#333"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/yeartextview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:text="Year" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/textview"
-        android:layout_width="match_parent"
+        android:id="@+id/typetextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:paddingLeft="20dp"
-        android:text="Title"
-        android:textColor="#333"
-        android:textSize="18sp" />
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:text="TextView" />
 
-    <TextView
-        android:id="@+id/yeartextview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:text="Year" />
-</LinearLayout>
+</RelativeLayout>
 

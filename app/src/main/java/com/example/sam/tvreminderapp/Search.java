@@ -11,6 +11,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.example.sam.tvreminderapp.MovieDetail.MovieDetailActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,14 +62,7 @@ public class Search extends AppCompatActivity implements SearchView.OnQueryTextL
             @Override
             public JSONArray onSuccess(JSONArray result) {
 
-                //définit l'agencement des cellules, ici de façon verticale, comme une ListView
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-                //pour adapter en grille comme une RecyclerView, avec 2 cellules par ligne
-                //recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-
-                //puis créer un MyAdapter, lui fournir notre liste de villes.
-                //cet adapter servira à remplir notre recyclerview
                 recyclerView.setAdapter(new searchResultAdapter(result, new searchResultAdapter.OnItemClickListener() {
                     @Override public void onItemClick(JSONObject item) {
                         try {

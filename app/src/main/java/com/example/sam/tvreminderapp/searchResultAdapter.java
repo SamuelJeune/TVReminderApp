@@ -55,6 +55,5 @@ public class searchResultAdapter extends RecyclerView.Adapter<searchResultViewHo
     public int getItemCount() {
         return list.size();
     }
-
 }
 

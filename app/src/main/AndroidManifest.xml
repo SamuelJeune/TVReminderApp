@@ -21,11 +21,12 @@
         <activity
             android:name=".Search"
             android:label="Search" />
-        <activity android:name=".MovieDetailActivity" />
+        <activity android:name=".MovieDetail.MovieDetailActivity" />
         <activity
             android:name=".Activity.Home"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MovieDetail.SeasonDetailActivity"></activity>
     </application>
 
 </manifest>
