@@ -6,30 +6,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.sam.tvreminderapp.DB.Table.MovieDB;
+import com.example.sam.tvreminderapp.DB.Table.TvShowDB;
 import com.example.sam.tvreminderapp.Object.Item;
 import com.example.sam.tvreminderapp.Object.Movie;
+import com.example.sam.tvreminderapp.Object.TvShow;
 
 import java.util.ArrayList;
 
 /**
- * Created by Angelo on 07/01/2018.
+ * Created by Angelo on 08/01/2018.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
+public class TvShowAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
 
     public interface OnItemClickListener {
         void onItemClick(Item item);
     }
 
-    private MovieAdapter.OnItemClickListener listener;
+    private TvShowAdapter.OnItemClickListener listener;
 
-    private ArrayList<Movie> listMovies = new ArrayList<>();
+    private ArrayList<TvShow> listTvShow = new ArrayList<>();
 
-    public MovieAdapter(Context context, MovieAdapter.OnItemClickListener listener) {
+    public TvShowAdapter(Context context, TvShowAdapter.OnItemClickListener listener) {
         this.listener = listener;
-        MovieDB movieDB = new MovieDB(context);
-        movieDB.allMovies(listMovies);
+        TvShowDB tvShowDB = new TvShowDB(context);
+        tvShowDB.allTvShows(listTvShow);
     }
 
     @Override
@@ -40,11 +41,11 @@ public class MovieAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.bind(listMovies.get(position), listener, null);
+        holder.bind(listTvShow.get(position), null, listener);
     }
 
     @Override
     public int getItemCount() {
-        return listMovies.size();
+        return listTvShow.size();
     }
 }

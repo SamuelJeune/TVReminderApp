@@ -22,10 +22,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.sam.tvreminderapp.MovieAdapter;
-import com.example.sam.tvreminderapp.MovieDetail.MovieDetailActivity;
+import com.example.sam.tvreminderapp.ItemDetail.ItemDetailActivity;
+import com.example.sam.tvreminderapp.Object.Item;
 import com.example.sam.tvreminderapp.Object.Movie;
 import com.example.sam.tvreminderapp.R;
 import com.example.sam.tvreminderapp.Search;
+import com.example.sam.tvreminderapp.TvShowAdapter;
 
 public class Home extends AppCompatActivity {
 
@@ -133,14 +135,29 @@ public class Home extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
-                RecyclerView recyclerView = rootView.findViewById(R.id.movieRecyclerView);
+                RecyclerView recyclerView = rootView.findViewById(R.id.itemRecyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(new MovieAdapter(getContext(), new MovieAdapter.OnItemClickListener() {
-                    @Override public void onItemClick(Movie item) {
-                            Toast.makeText(getContext(), "Item Clicked "+item.getTitle(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-                            intent.putExtra("MOVIE_ID", item.getIdOMDB());
-                            startActivity(intent);
+                    @Override
+                    public void onItemClick(Item item) {
+                        Toast.makeText(getContext(), "Item Clicked "+item.getTitle(), Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getContext(), ItemDetailActivity.class);
+                        intent.putExtra("ITEM_ID", item.getIdOMDB());
+                        startActivity(intent);
+
+                    }}));
+            }
+
+            if(getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
+                RecyclerView recyclerView = rootView.findViewById(R.id.itemRecyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(new TvShowAdapter(getContext(), new TvShowAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Item item) {
+                        Toast.makeText(getContext(), "Item Clicked "+item.getTitle(), Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getContext(), ItemDetailActivity.class);
+                        intent.putExtra("ITEM_ID", item.getIdOMDB());
+                        startActivity(intent);
                     }}));
             }
 

@@ -4,15 +4,18 @@ package com.example.sam.tvreminderapp.Object;
  * Created by Angelo on 06/01/2018.
  */
 
-public class TvShow {
+public class TvShow extends Item{
 
     private long id;
+    private String idOMDB;
     private String title;
-    private int year;
+    private String year;
     private int nbSeasons;
 
-    public TvShow(long id, String title, int year, int nbSeasons) {
+    public TvShow(long id, String idOMDB, String title, String year, int nbSeasons) {
+        super("series");
         this.id = id;
+        this.idOMDB = idOMDB;
         this.title = title;
         this.year = year;
         this.nbSeasons = nbSeasons;
@@ -26,6 +29,14 @@ public class TvShow {
         this.id = id;
     }
 
+    public String getIdOMDB() {
+        return idOMDB;
+    }
+
+    public void setIdOMDB(String idOMDB) {
+        this.idOMDB = idOMDB;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -34,11 +45,11 @@ public class TvShow {
         this.title = title;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 

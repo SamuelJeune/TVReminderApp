@@ -1,4 +1,4 @@
-package com.example.sam.tvreminderapp.MovieDetail;
+package com.example.sam.tvreminderapp.ItemDetail;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

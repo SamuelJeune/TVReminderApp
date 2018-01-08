@@ -74,13 +74,13 @@ public class OMDBApiConnection {
             queue.add(jsonArrayRequest);
     }
 
-    public static void getMovieById(String movieId, Context context, final VolleyCallbackObject callback){
+    public static void getItemById(String itemId, Context context, final VolleyCallbackObject callback){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(context);
 
         // Request a string response from the provided URL.
-        String query = url + "&i=" + movieId;
-        Log.d("movie Id : ", query);
+        String query = url + "&i=" + itemId;
+        Log.d("Item Id : ", query);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,

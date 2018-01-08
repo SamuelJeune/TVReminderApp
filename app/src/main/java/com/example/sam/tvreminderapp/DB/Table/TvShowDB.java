@@ -18,13 +18,15 @@ public class TvShowDB extends TableObject {
 
     public static final String TABLE_NAME = "TvShow";
     public static final String KEY = "id";
+    public static final String KEY_OMDB = "idOMDB";
     public static final String TITLE = "title";
     public static final String YEAR = "year";
     public static final String NUMBER_OF_SEASONS = "nb_season";
 
     public static final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+            + KEY_OMDB + " TEXT, "
             + TITLE + " TEXT, "
-            + YEAR + " INTEGER, "
+            + YEAR + " TEXT, "
             + NUMBER_OF_SEASONS + " INTEGER);";
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
@@ -72,15 +74,16 @@ public class TvShowDB extends TableObject {
         }
     }
 
-    public long add(long id, String title, int year, int numberSeasons) {
+    public long add(String idOMDB, String title, String year, int numberSeasons) {
+        long id;
         ContentValues value = new ContentValues();
-        value.put(KEY, id);
+        value.put(KEY_OMDB, idOMDB);
         value.put(TITLE, title);
         value.put(YEAR, year);
         value.put(NUMBER_OF_SEASONS, numberSeasons);
         this.open();
 
-        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where title = '" + title + "' AND year = " + year, null);
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where title = '" + title + "' AND year = '" + year + "'", null);
 
         if(c.getCount() == 0) {
             id = mDb.insert(TABLE_NAME, null, value);
@@ -124,7 +127,7 @@ public class TvShowDB extends TableObject {
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where id = " + id, null);
 
         while (c.moveToNext()) {
-            tvShow = new TvShow(c.getLong(0), c.getString(1), c.getInt(2), c.getInt(3));
+            tvShow = new TvShow(c.getLong(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4));
         }
         c.close();
         return tvShow;
@@ -136,7 +139,7 @@ public class TvShowDB extends TableObject {
 
         //Parcours
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME, null);
-        while (c.moveToNext()) { list.add(new TvShow(c.getLong(0), c.getString(1), c.getInt(2), c.getInt(3))); }
+        while (c.moveToNext()) { list.add(new TvShow(c.getLong(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4))); }
 
         //Fermeture flux
         c.close();
@@ -153,7 +156,7 @@ public class TvShowDB extends TableObject {
         mDb = this.read();
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME, null);
         while (c.moveToNext()) {
-            result += c.getLong(0) + " " + c.getString(1) + " " + c.getInt(2) + " " + c.getInt(3) +"\n";
+            result += c.getLong(0) + " " + c.getString(1) + " " + c.getString(2) + " " + c.getString(3) + " " + c.getInt(4) +"\n";
         }
         c.close();
 

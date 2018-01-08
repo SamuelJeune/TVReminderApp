@@ -1,4 +1,4 @@
-package com.example.sam.tvreminderapp.MovieDetail;
+package com.example.sam.tvreminderapp.ItemDetail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sam.tvreminderapp.DB.Table.MovieDB;
+import com.example.sam.tvreminderapp.DB.Table.TvShowDB;
 import com.example.sam.tvreminderapp.OMDBApiConnection;
 import com.example.sam.tvreminderapp.R;
 import com.squareup.picasso.Picasso;
@@ -19,21 +20,21 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class ItemDetailActivity extends AppCompatActivity {
 
-    JSONObject movieInformation;
-    private String movieId;
+    private JSONObject itemInformation;
+    private String itemId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         Intent intent = getIntent();
-        movieId = intent.getStringExtra("MOVIE_ID");
+        itemId = intent.getStringExtra("ITEM_ID");
 
-        OMDBApiConnection.getMovieById(movieId, this, new OMDBApiConnection.VolleyCallbackObject() {
+        OMDBApiConnection.getItemById(itemId, this, new OMDBApiConnection.VolleyCallbackObject() {
             @Override
             public JSONObject onSuccess(JSONObject result) {
-                movieInformation=result;
+                itemInformation =result;
                 dysplayMovieInformation(result);
                 return result;
             }
@@ -43,14 +44,22 @@ public class MovieDetailActivity extends AppCompatActivity {
         addToSeenListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onAddToListButtonClicked(1);
+                try {
+                    onAddToListButtonClicked(1, itemInformation.getString("Type"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
         final Button addToWishListButton = findViewById(R.id.addtowishbutton);
         addToWishListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onAddToListButtonClicked(0);
+                try {
+                    onAddToListButtonClicked(0,  itemInformation.getString("Type"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -84,10 +93,10 @@ public class MovieDetailActivity extends AppCompatActivity {
                 seeSeasonDetailButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dysplaySerieInformation(movieId, totalSeasons);
+                        dysplaySerieInformation(itemId, totalSeasons);
                     }
                 });
-            }
+            } else seeSeasonDetailButton.setVisibility(View.INVISIBLE);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -101,14 +110,21 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
 
-    public void onAddToListButtonClicked(int seen){
+    public void onAddToListButtonClicked(int seen, String type){
+        long id;
         MovieDB movieDB = new MovieDB(this.getApplicationContext());
-
+        TvShowDB tvShowDB = new TvShowDB(this.getApplicationContext());
+        System.out.println("ADDING ITEM : " + itemId);
         try {
-            long id = movieDB.add(movieId, movieInformation.getString("Title"), movieInformation.getInt("Year"), movieInformation.getString("Director"), seen);
-            Toast.makeText(getApplicationContext(), "Item added to seen list, ID : " + id, Toast.LENGTH_SHORT).show();
+            if(type.equals("movie")) {
+                id = movieDB.add(itemId, itemInformation.getString("Title"), itemInformation.getInt("Year"), itemInformation.getString("Director"), seen);
+                Toast.makeText(getApplicationContext(), "Movie added to list, ID : " + id, Toast.LENGTH_SHORT).show();
+            } else if(type.equals("series")) {
+                id = tvShowDB.add(itemId, itemInformation.getString("Title"), itemInformation.getString("Year"), itemInformation.getInt("totalSeasons"));
+                Toast.makeText(getApplicationContext(), "Tv show added to list, ID : " + id, Toast.LENGTH_SHORT).show();
+            } else System.out.println("ERROR  : " + type);
         } catch (JSONException e) {
-            System.err.println("ERROR ADDING MOVIE !");
+            System.err.println("ERROR ADDING ITEM !");
             e.printStackTrace();
         }
     }

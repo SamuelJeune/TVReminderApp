@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
-import com.example.sam.tvreminderapp.MovieDetail.MovieDetailActivity;
+import com.example.sam.tvreminderapp.ItemDetail.ItemDetailActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,7 +67,7 @@ public class Search extends AppCompatActivity implements SearchView.OnQueryTextL
                     @Override public void onItemClick(JSONObject item) {
                         try {
                             Toast.makeText(getApplicationContext(), "Item Clicked "+item.getString("Title"), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getApplicationContext(), MovieDetailActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
                             intent.putExtra("MOVIE_ID", item.getString("imdbID"));
                             startActivity(intent);
                         } catch (JSONException e) {

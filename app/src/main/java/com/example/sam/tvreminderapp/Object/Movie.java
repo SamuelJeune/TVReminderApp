@@ -4,7 +4,7 @@ package com.example.sam.tvreminderapp.Object;
  * Created by Angelo on 06/01/2018.
  */
 
-public class Movie {
+public class Movie extends Item{
 
     private long id;
     private String idOMDB;
@@ -14,6 +14,7 @@ public class Movie {
     private boolean seen;
 
     public Movie(long id, String idOMDB, String title, int year, String director, boolean seen) {
+        super("movie");
         this.id = id;
         this.idOMDB = idOMDB;
         this.title = title;
@@ -46,8 +47,8 @@ public class Movie {
         this.title = title;
     }
 
-    public int getYear() {
-        return year;
+    public String getYear() {
+        return String.valueOf(year);
     }
 
     public void setYear(int year) {

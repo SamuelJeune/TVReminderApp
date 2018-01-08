@@ -1,4 +1,4 @@
-package com.example.sam.tvreminderapp.MovieDetail;
+package com.example.sam.tvreminderapp.ItemDetail;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
