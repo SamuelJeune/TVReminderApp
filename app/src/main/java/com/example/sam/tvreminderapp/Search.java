@@ -68,7 +68,7 @@ public class Search extends AppCompatActivity implements SearchView.OnQueryTextL
                         try {
                             Toast.makeText(getApplicationContext(), "Item Clicked "+item.getString("Title"), Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
-                            intent.putExtra("MOVIE_ID", item.getString("imdbID"));
+                            intent.putExtra("ITEM_ID", item.getString("imdbID"));
                             startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
