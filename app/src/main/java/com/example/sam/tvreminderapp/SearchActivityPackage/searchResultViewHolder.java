@@ -1,11 +1,10 @@
-package com.example.sam.tvreminderapp;
+package com.example.sam.tvreminderapp.SearchActivityPackage;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.sam.tvreminderapp.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

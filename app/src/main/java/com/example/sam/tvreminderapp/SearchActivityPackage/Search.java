@@ -1,4 +1,4 @@
-package com.example.sam.tvreminderapp;
+package com.example.sam.tvreminderapp.SearchActivityPackage;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 
 import com.example.sam.tvreminderapp.ItemDetail.ItemDetailActivity;
+import com.example.sam.tvreminderapp.OMDBApiConnection;
+import com.example.sam.tvreminderapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

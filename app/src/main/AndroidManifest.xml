@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Search"
+            android:name=".SearchActivityPackage.Search"
             android:label="Search" />
         <activity android:name=".ItemDetail.ItemDetailActivity" />
         <activity

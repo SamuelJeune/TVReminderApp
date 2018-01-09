@@ -146,7 +146,7 @@ public class OMDBApiConnection {
     }
 
 
-    interface VolleyCallbackArray {
+    public interface VolleyCallbackArray {
         JSONArray onSuccess(JSONArray result);
     }
 

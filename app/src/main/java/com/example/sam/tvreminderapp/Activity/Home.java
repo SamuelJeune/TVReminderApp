@@ -24,9 +24,8 @@ import android.widget.Toast;
 import com.example.sam.tvreminderapp.MovieAdapter;
 import com.example.sam.tvreminderapp.ItemDetail.ItemDetailActivity;
 import com.example.sam.tvreminderapp.Object.Item;
-import com.example.sam.tvreminderapp.Object.Movie;
 import com.example.sam.tvreminderapp.R;
-import com.example.sam.tvreminderapp.Search;
+import com.example.sam.tvreminderapp.SearchActivityPackage.Search;
 import com.example.sam.tvreminderapp.TvShowAdapter;
 
 public class Home extends AppCompatActivity {

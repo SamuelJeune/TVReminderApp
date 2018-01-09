@@ -1,9 +1,11 @@
-package com.example.sam.tvreminderapp;
+package com.example.sam.tvreminderapp.SearchActivityPackage;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.sam.tvreminderapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
