@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sam.tvreminderapp.Object.Item;
+import com.example.sam.tvreminderapp.Object.Movie;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -19,7 +20,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     private TextView textViewView;
     private TextView yearTextView;
-    private TextView descriptionView;
+    private TextView seenTextView;
     private View view;
 
     public ItemViewHolder(View itemView) {
@@ -27,14 +28,21 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         view = itemView;
         textViewView = itemView.findViewById(R.id.title_item);
         yearTextView = itemView.findViewById(R.id.year_item);
-        descriptionView = itemView.findViewById(R.id.description_item);
+        seenTextView = itemView.findViewById(R.id.seentextView);
     }
 
     public void bind(final Item item, final MovieAdapter.OnItemClickListener movieListener, final TvShowAdapter.OnItemClickListener tvShowListener) {
         textViewView.setText(item.getTitle());
         yearTextView.setText(item.getYear());
 
+
         if(item.getType() == "movie") {
+            Movie movie = (Movie) item;
+            if(movie.isSeen()){
+                seenTextView.setText("Seen");
+            }else{
+                seenTextView.setText("Wish");
+            }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -46,7 +54,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 public JSONObject onSuccess(JSONObject result) {
                     try {
                         Picasso.with(view.getContext()).load(result.getString("Poster")).into((ImageView) view.findViewById(R.id.poster));
-                        descriptionView.setText(result.getString("Plot"));
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -66,7 +74,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 public JSONObject onSuccess(JSONObject result) {
                     try {
                         Picasso.with(view.getContext()).load(result.getString("Poster")).into((ImageView) view.findViewById(R.id.poster));
-                        descriptionView.setText(result.getString("Plot"));
+                        //descriptionView.setText(result.getString("Plot"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
