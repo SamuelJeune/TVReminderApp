@@ -80,6 +80,13 @@ public class Home extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,6 +120,9 @@ public class Home extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+        private TvShowAdapter tvShowAdapter;
+        private MovieAdapter movieAdapter;
+
         public PlaceholderFragment() {
         }
 
@@ -132,32 +142,30 @@ public class Home extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+            RecyclerView recyclerView = rootView.findViewById(R.id.itemRecyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
-                RecyclerView recyclerView = rootView.findViewById(R.id.itemRecyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(new MovieAdapter(getContext(), new MovieAdapter.OnItemClickListener() {
+                movieAdapter = new MovieAdapter(getContext(), new MovieAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Item item) {
-                        Toast.makeText(getContext(), "Item Clicked "+item.getTitle(), Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getContext(), ItemDetailActivity.class);
                         intent.putExtra("ITEM_ID", item.getIdOMDB());
                         startActivity(intent);
 
-                    }}));
+                    }});
+                recyclerView.setAdapter(movieAdapter);
             }
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
-                RecyclerView recyclerView = rootView.findViewById(R.id.itemRecyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(new TvShowAdapter(getContext(), new TvShowAdapter.OnItemClickListener() {
+                tvShowAdapter = new TvShowAdapter(getContext(), new TvShowAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Item item) {
-                        Toast.makeText(getContext(), "Item Clicked "+item.getTitle(), Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getContext(), ItemDetailActivity.class);
                         intent.putExtra("ITEM_ID", item.getIdOMDB());
                         startActivity(intent);
-                    }}));
+                    }});
+                recyclerView.setAdapter(tvShowAdapter);
             }
 
             return rootView;

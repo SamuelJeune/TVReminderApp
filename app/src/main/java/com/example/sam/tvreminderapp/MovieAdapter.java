@@ -18,6 +18,8 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
 
+    private MovieDB movieDB;
+
     public interface OnItemClickListener {
         void onItemClick(Item item);
     }
@@ -28,7 +30,12 @@ public class MovieAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
 
     public MovieAdapter(Context context, MovieAdapter.OnItemClickListener listener) {
         this.listener = listener;
-        MovieDB movieDB = new MovieDB(context);
+        this.movieDB = new MovieDB(context);
+        refresh();
+    }
+
+    public void refresh() {
+        listMovies.clear();
         movieDB.allMovies(listMovies);
     }
 

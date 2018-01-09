@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 public class TvShowAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
 
+    private TvShowDB tvShowDB;
+
     public interface OnItemClickListener {
         void onItemClick(Item item);
     }
@@ -29,7 +31,12 @@ public class TvShowAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
 
     public TvShowAdapter(Context context, TvShowAdapter.OnItemClickListener listener) {
         this.listener = listener;
-        TvShowDB tvShowDB = new TvShowDB(context);
+        tvShowDB = new TvShowDB(context);
+        refresh();
+    }
+
+    public void refresh() {
+        listTvShow.clear();
         tvShowDB.allTvShows(listTvShow);
     }
 
