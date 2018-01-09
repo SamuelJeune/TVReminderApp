@@ -105,8 +105,11 @@ public class MovieDB extends TableObject {
      * Delete a TvShow
      * @param id identification number of the TvShow
      */
-    public void delete(long id) {
+    public void delete(String id) {
         // CODE
+        mDb = this.read();
+        mDb.delete(TABLE_NAME, "idOMDB = '" + id + "'", null);
+        this.close();
     }
 
     public void update(int idMovie, String[] keys, String[] params) {
@@ -128,6 +131,23 @@ public class MovieDB extends TableObject {
 
         mDb = this.read();
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where id = " + id, null);
+
+        while (c.moveToNext()) {
+            movie = new Movie(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getString(4), c.getInt(5) == 1);
+        }
+        c.close();
+        return movie;
+    }
+
+    public Movie getMovieByIMDBID(String id) {
+        Movie movie = null;
+
+        mDb = this.read();
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where idOMDB = '" + id + "'", null);
+        if(c.getCount()<=0){
+            c.close();
+            return null;
+        }
 
         while (c.moveToNext()) {
             movie = new Movie(c.getLong(0), c.getString(1), c.getString(2), c.getInt(3), c.getString(4), c.getInt(5) == 1);
