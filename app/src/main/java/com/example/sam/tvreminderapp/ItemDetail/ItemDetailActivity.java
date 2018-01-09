@@ -1,6 +1,7 @@
 package com.example.sam.tvreminderapp.ItemDetail;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.example.sam.tvreminderapp.DB.Table.MovieDB;
 import com.example.sam.tvreminderapp.DB.Table.TvShowDB;
 import com.example.sam.tvreminderapp.OMDBApiConnection;
+import com.example.sam.tvreminderapp.Object.Movie;
 import com.example.sam.tvreminderapp.R;
 import com.squareup.picasso.Picasso;
 
@@ -25,12 +27,18 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     private JSONObject itemInformation;
     private String itemId;
+    private MovieDB movieDB;
+    Button addToSeenListButton;
+    Button addToWishListButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         Intent intent = getIntent();
         itemId = intent.getStringExtra("ITEM_ID");
+
+        this.movieDB = new MovieDB(getApplicationContext());
 
         final LinearLayout linearLayoutInformations = findViewById(R.id.container_informations);
         final LinearLayout linearLayoutSpinner = findViewById(R.id.container_spinner);
@@ -47,7 +55,10 @@ public class ItemDetailActivity extends AppCompatActivity {
             }
         });
 
-        Button addToSeenListButton = findViewById(R.id.addtoseenbutton);
+
+
+
+        addToSeenListButton = findViewById(R.id.addtoseenbutton);
         addToSeenListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +69,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 }
             }
         });
-        final Button addToWishListButton = findViewById(R.id.addtowishbutton);
+        addToWishListButton = findViewById(R.id.addtowishbutton);
         addToWishListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +80,9 @@ public class ItemDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
 
 
     }
@@ -103,7 +117,13 @@ public class ItemDetailActivity extends AppCompatActivity {
                         dysplaySerieInformation(itemId, totalSeasons);
                     }
                 });
-            } else seeSeasonDetailButton.setVisibility(View.INVISIBLE);
+            } else {
+                seeSeasonDetailButton.setVisibility(View.INVISIBLE);
+                final Movie movie = movieDB.getMovieByIMDBID(itemId);
+                if(movie!=null) {
+                    updateButton(movie);
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -126,6 +146,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             if(type.equals("movie")) {
                 id = movieDB.add(itemId, itemInformation.getString("Title"), itemInformation.getInt("Year"), itemInformation.getString("Director"), seen);
                 Toast.makeText(getApplicationContext(), "Movie added to list, ID : " + id, Toast.LENGTH_SHORT).show();
+                updateButton(movieDB.getMovie(id));
             } else if(type.equals("series")) {
                 id = tvShowDB.add(itemId, itemInformation.getString("Title"), itemInformation.getString("Year"), itemInformation.getInt("totalSeasons"));
                 Toast.makeText(getApplicationContext(), "Tv show added to list, ID : " + id, Toast.LENGTH_SHORT).show();
@@ -134,5 +155,62 @@ public class ItemDetailActivity extends AppCompatActivity {
             System.err.println("ERROR ADDING ITEM !");
             e.printStackTrace();
         }
+
+    }
+
+    public void deleteFromList(Movie movie){
+        MovieDB movieDB = new MovieDB(this.getApplicationContext());
+        movieDB.delete(movie.getIdOMDB());
+        updateButton(null);
+    }
+
+    public void updateButton(final Movie movie){
+        if(movie==null){
+            addToSeenListButton.setText("Add To Seen List");
+            addToSeenListButton.setBackgroundColor(Color.GREEN);
+            addToSeenListButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        onAddToListButtonClicked(1, itemInformation.getString("Type"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            addToWishListButton.setText("Add To Wish List");
+            addToWishListButton.setBackgroundColor(Color.BLUE);
+            addToWishListButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        onAddToListButtonClicked(0,  itemInformation.getString("Type"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }else{
+            if (movie.isSeen()) {
+                addToSeenListButton.setText("Delete From Seen List");
+                addToSeenListButton.setBackgroundColor(Color.RED);
+                addToSeenListButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        deleteFromList(movie);
+                    }
+                });
+            } else {
+                addToWishListButton.setText("Delete From Wish List");
+                addToWishListButton.setBackgroundColor(Color.RED);
+                addToWishListButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        deleteFromList(movie);
+                    }
+                });
+            }
+        }
+
     }
 }

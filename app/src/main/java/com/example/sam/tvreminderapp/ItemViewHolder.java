@@ -36,6 +36,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         yearTextView.setText(item.getYear());
 
 
+        System.out.println("Movie ID : "+item.getIdOMDB());
         if(item.getType() == "movie") {
             Movie movie = (Movie) item;
             if(movie.isSeen()){
