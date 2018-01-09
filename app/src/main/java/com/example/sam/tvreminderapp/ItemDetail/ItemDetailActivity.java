@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,15 @@ public class ItemDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         itemId = intent.getStringExtra("ITEM_ID");
 
+        final LinearLayout linearLayoutInformations = findViewById(R.id.container_informations);
+        final LinearLayout linearLayoutSpinner = findViewById(R.id.container_spinner);
+        linearLayoutInformations.setVisibility(View.INVISIBLE);
+
         OMDBApiConnection.getItemById(itemId, this, new OMDBApiConnection.VolleyCallbackObject() {
             @Override
             public JSONObject onSuccess(JSONObject result) {
+                linearLayoutInformations.setVisibility(View.VISIBLE);
+                linearLayoutSpinner.setVisibility(View.INVISIBLE);
                 itemInformation =result;
                 dysplayMovieInformation(result);
                 return result;
