@@ -112,7 +112,7 @@ public class MovieDB extends TableObject {
         this.close();
     }
 
-    public void update(int idMovie, String[] keys, String[] params) {
+    public void update(long idMovie, String[] keys, String[] params) {
         this.open();
         ContentValues contentValues = new ContentValues();
 

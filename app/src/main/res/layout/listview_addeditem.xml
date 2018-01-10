@@ -66,14 +66,14 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/seentextView"
+        <CheckBox
+            android:id="@+id/seen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:padding="5dp" />
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="11dp"
+            android:text="" />
 
     </RelativeLayout>
 

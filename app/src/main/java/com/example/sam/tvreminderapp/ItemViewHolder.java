@@ -2,9 +2,11 @@ package com.example.sam.tvreminderapp;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sam.tvreminderapp.DB.Table.MovieDB;
 import com.example.sam.tvreminderapp.Object.Item;
 import com.example.sam.tvreminderapp.Object.Movie;
 import com.squareup.picasso.Picasso;
@@ -20,7 +22,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     private TextView textViewView;
     private TextView yearTextView;
-    private TextView seenTextView;
+    private CheckBox seenBox;
     private View view;
 
     public ItemViewHolder(View itemView) {
@@ -28,7 +30,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         view = itemView;
         textViewView = itemView.findViewById(R.id.title_item);
         yearTextView = itemView.findViewById(R.id.year_item);
-        seenTextView = itemView.findViewById(R.id.seentextView);
+        seenBox = itemView.findViewById(R.id.seen);
     }
 
     public void bind(final Item item, final MovieAdapter.OnItemClickListener movieListener, final TvShowAdapter.OnItemClickListener tvShowListener) {
@@ -38,12 +40,31 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         System.out.println("Movie ID : "+item.getIdOMDB());
         if(item.getType() == "movie") {
-            Movie movie = (Movie) item;
+            final Movie movie = (Movie) item;
             if(movie.isSeen()){
-                seenTextView.setText("Seen");
+                seenBox.setChecked(true);
             }else{
-                seenTextView.setText("Wish");
+                seenBox.setChecked(false);
             }
+
+            seenBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MovieDB movieDB = new MovieDB(view.getContext());
+                    String[] values = new String[1];
+                    String[] keys = new String[1];
+                    keys[0] = "seen";
+
+                    if (((CheckBox) v).isChecked()) {
+                        values[0] = "1";
+                    }
+                    else {
+                        values[0] = "0";
+                    }
+                    movieDB.update(movie.getId(), keys, values);
+                }
+            });
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
