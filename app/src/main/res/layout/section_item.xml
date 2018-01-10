@@ -15,5 +15,15 @@
         android:layout_margin="10dp"
         tools:text="Item test text" />
 
+    <CheckBox
+        android:id="@+id/checkbox_episode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvItem"
+        android:layout_alignBottom="@+id/tvItem"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:text="" />
+
 
 </RelativeLayout>

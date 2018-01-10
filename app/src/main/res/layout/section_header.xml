@@ -28,6 +28,15 @@
         android:src="@drawable/ic_keyboard_arrow_up_black_18dp"/>
 
 
+    <CheckBox
+        android:id="@+id/checkbox_season"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@+id/imgArrow"
+        android:text="" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
