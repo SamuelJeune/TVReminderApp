@@ -5,8 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.sam.tvreminderapp.DB.Table.EpisodeDB;
+import com.example.sam.tvreminderapp.DB.Table.SeasonDB;
+import com.example.sam.tvreminderapp.DB.Table.TvShowDB;
 import com.example.sam.tvreminderapp.OMDBApiConnection;
+import com.example.sam.tvreminderapp.Object.Episode;
+import com.example.sam.tvreminderapp.Object.TvShow;
 import com.example.sam.tvreminderapp.R;
 
 import org.json.JSONArray;
@@ -25,13 +31,13 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
  */
 
 class MySection extends StatelessSection {
-    private List<JSONObject> list;
+    private ArrayList<Episode> list;
     private int season;
     private JSONArray jsonArray;
     boolean expanded = true;
     SectionedRecyclerViewAdapter sectionAdapter;
 
-    public MySection(String movieId , int season, Context context, final SectionedRecyclerViewAdapter sectionAdapter) {
+    public MySection(String movieId , final int season, Context context, final SectionedRecyclerViewAdapter sectionAdapter) {
         // call constructor with layout resources for this Section header and items
         super(new SectionParameters.Builder(R.layout.section_item)
                 .headerResourceId(R.layout.section_header)
@@ -40,25 +46,36 @@ class MySection extends StatelessSection {
         list = new ArrayList<>();
         this.sectionAdapter = sectionAdapter;
 
-        OMDBApiConnection.getSeasonDetail(movieId, season, context, new OMDBApiConnection.VolleyCallbackObject() {
-            @Override
-            public JSONObject onSuccess(JSONObject result) {
-                try {
-                    jsonArray= result.getJSONArray("Episodes");
-                    for(int i=0; i<jsonArray.length(); i++) {
-                        try {
-                            list.add(jsonArray.getJSONObject(i));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        TvShowDB tvShowDB = new TvShowDB(context);
+        TvShow tvShow = tvShowDB.getTvShowByIdOMDB(movieId);
+
+        if(tvShow == null) {
+            OMDBApiConnection.getSeasonDetail(movieId, season, context, new OMDBApiConnection.VolleyCallbackObject() {
+                @Override
+                public JSONObject onSuccess(JSONObject result) {
+                    try {
+                        jsonArray = result.getJSONArray("Episodes");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            try {
+                                list.add(new Episode(0, jsonArray.getJSONObject(i).getString("Title"), i+1, false, 0));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            sectionAdapter.notifyDataSetChanged();
                         }
-                        sectionAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    return result;
                 }
-                return result;
-            }
-        });
+            });
+        }
+        else {
+            SeasonDB seasonDB = new SeasonDB(context);
+            EpisodeDB episodeDB = new EpisodeDB(context);
+            episodeDB.allEpisodeFromSeason(list, seasonDB.getSeasonByIdTvShow(tvShowDB.getTvShowByIdOMDB(movieId).getId(), season).getId(), season);
+            sectionAdapter.notifyDataSetChanged();
+        }
 
     }
 
@@ -78,11 +95,7 @@ class MySection extends StatelessSection {
         MyItemViewHolder itemHolder = (MyItemViewHolder) holder;
 
         // bind your view here
-        try {
-            itemHolder.tvItem.setText(list.get(position).getString("Title"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        itemHolder.tvItem.setText(list.get(position).getTitle());
     }
 
     @Override

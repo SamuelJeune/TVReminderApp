@@ -11,13 +11,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sam.tvreminderapp.DB.Table.EpisodeDB;
 import com.example.sam.tvreminderapp.DB.Table.MovieDB;
+import com.example.sam.tvreminderapp.DB.Table.SeasonDB;
 import com.example.sam.tvreminderapp.DB.Table.TvShowDB;
 import com.example.sam.tvreminderapp.OMDBApiConnection;
 import com.example.sam.tvreminderapp.Object.Movie;
 import com.example.sam.tvreminderapp.R;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,8 +31,11 @@ public class ItemDetailActivity extends AppCompatActivity {
     private JSONObject itemInformation;
     private String itemId;
     private MovieDB movieDB;
-    Button addToSeenListButton;
-    Button addToWishListButton;
+    private int totalSeasons;
+    private Button addToSeenListButton;
+    private Button addToWishListButton;
+
+    private JSONArray jsonArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +116,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             actorTextView.setText(result.getString("Actors"));
             descriptionTextView.setText(result.getString("Plot"));
             if(Objects.equals(result.getString("Type"), "series")){
-                final int totalSeasons = Integer.parseInt(result.getString("totalSeasons"));
+                totalSeasons = Integer.parseInt(result.getString("totalSeasons"));
                 seeSeasonDetailButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -140,7 +146,6 @@ public class ItemDetailActivity extends AppCompatActivity {
     public void onAddToListButtonClicked(int seen, String type){
         long id;
         MovieDB movieDB = new MovieDB(this.getApplicationContext());
-        TvShowDB tvShowDB = new TvShowDB(this.getApplicationContext());
         System.out.println("ADDING ITEM : " + itemId);
         try {
             if(type.equals("movie")) {
@@ -148,14 +153,44 @@ public class ItemDetailActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Movie added to list, ID : " + id, Toast.LENGTH_SHORT).show();
                 updateButton(movieDB.getMovie(id));
             } else if(type.equals("series")) {
-                id = tvShowDB.add(itemId, itemInformation.getString("Title"), itemInformation.getString("Year"), itemInformation.getInt("totalSeasons"));
-                Toast.makeText(getApplicationContext(), "Tv show added to list, ID : " + id, Toast.LENGTH_SHORT).show();
+                addTvShow();
             } else System.out.println("ERROR  : " + type);
         } catch (JSONException e) {
             System.err.println("ERROR ADDING ITEM !");
             e.printStackTrace();
         }
 
+    }
+
+    public void addTvShow() throws JSONException {
+        TvShowDB tvShowDB = new TvShowDB(this.getApplicationContext());
+        final long idTvShow = tvShowDB.add(itemId, itemInformation.getString("Title"), itemInformation.getString("Year"), itemInformation.getInt("totalSeasons"));
+        final SeasonDB seasonDB = new SeasonDB(getApplicationContext());
+        final EpisodeDB episodeDB = new EpisodeDB(getApplicationContext());
+
+        for(int i = 0; i < totalSeasons; i++) {
+            OMDBApiConnection.getSeasonDetail(itemId, i+1, getApplicationContext(), new OMDBApiConnection.VolleyCallbackObject() {
+                @Override
+                public JSONObject onSuccess(JSONObject result) {
+                    try {
+                        jsonArray = result.getJSONArray("Episodes");
+                        long idSeason = seasonDB.add(result.getInt("Season"), idTvShow);
+                        for (int j = 0; j < jsonArray.length(); j++) {
+                            try {
+                                episodeDB.add(jsonArray.getJSONObject(j).getString("Title"), result.getInt("Season"), 0, idSeason);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return result;
+                }
+            });
+        }
+
+        Toast.makeText(getApplicationContext(), "Tv show added to list, ID : " + idTvShow, Toast.LENGTH_SHORT).show();
     }
 
     public void deleteFromList(Movie movie){

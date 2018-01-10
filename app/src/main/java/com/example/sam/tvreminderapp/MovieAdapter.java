@@ -37,6 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
     public void refresh() {
         listMovies.clear();
         movieDB.allMovies(listMovies);
+        sortList();
     }
 
     @Override
@@ -53,5 +54,17 @@ public class MovieAdapter extends RecyclerView.Adapter<ItemViewHolder>  {
     @Override
     public int getItemCount() {
         return listMovies.size();
+    }
+
+    public void sortList() {
+        for (int i = 0; i < listMovies.size()-1; i++) {
+            for(int j = i + 1; j < listMovies.size(); j++) {
+                if(listMovies.get(i).isSeen() && !listMovies.get(j).isSeen()) {
+                    Movie m = listMovies.get(j);
+                    listMovies.remove(j);
+                    listMovies.set(i, m);
+                }
+            }
+        }
     }
 }

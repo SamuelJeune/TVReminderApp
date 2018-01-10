@@ -133,6 +133,19 @@ public class TvShowDB extends TableObject {
         return tvShow;
     }
 
+    public TvShow getTvShowByIdOMDB(String id) {
+        TvShow tvShow = null;
+
+        mDb = this.read();
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where idOMDB = '" + id + "'", null);
+
+        while (c.moveToNext()) {
+            tvShow = new TvShow(c.getLong(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4));
+        }
+        c.close();
+        return tvShow;
+    }
+
     public ArrayList<TvShow> allTvShows(ArrayList<TvShow> list) {
         //Lecture
         mDb = this.read();
