@@ -100,19 +100,52 @@ public class SeasonDB extends TableObject {
     }
 
     /**
-     * @param id identification number of the TvShow
+     * @param idOMDB identification number of the TvShow
      */
-    public Season getSeason(long id) {
+    public Season getSeason(String idOMDB, int number) {
         Season season = null;
 
         mDb = this.read();
-        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where id = " + id, null);
+        System.out.println("select * from " + TABLE_NAME + " INNER JOIN TvShow ON TvShow.id=Season.idTvShow" +
+                " where Season.number = " + number + " AND idOMDB = " + idOMDB);
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " INNER JOIN TvShow ON TvShow.id=Season.idTvShow" +
+                " where Season.number = " + number + " AND idOMDB = '" + idOMDB + "'", null);
 
         while (c.moveToNext()) {
             season = new Season(c.getLong(0), c.getInt(1), c.getInt(2));
         }
         c.close();
         return season;
+    }
+
+    public boolean isSeen(String idOMDB, int number) {
+        EpisodeDB episodeDB = new EpisodeDB(context);
+        ArrayList<Episode> listEpisodes = new ArrayList<>();
+        long idSeason = getSeason(idOMDB, number).getId();
+
+        episodeDB.allEpisodeFromSeason(listEpisodes, idSeason, number);
+
+        for(Episode episode : listEpisodes) {
+            if(!episode.isSeen()) return false;
+        }
+        return true;
+    }
+
+    public void setSeasonSeen(String idTvShow, int number, int seen) {
+        EpisodeDB episodeDB = new EpisodeDB(context);
+        ArrayList<Episode> listEpisodes = new ArrayList<>();
+        long idSeason = getSeason(idTvShow, number).getId();
+
+        episodeDB.allEpisodeFromSeason(listEpisodes, idSeason, number);
+
+        for(Episode episode : listEpisodes) {
+            String[] params = new String[1];
+            String[] values = new String[1];
+            params[0] = "seen";
+            values[0] = String.valueOf(seen);
+
+            episodeDB.update(episode.getId(), params, values);
+        }
     }
 
     public Season getSeasonByIdTvShow(long id, int number) {

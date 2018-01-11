@@ -3,11 +3,13 @@ package com.example.sam.tvreminderapp.ItemDetail;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sam.tvreminderapp.DB.Table.EpisodeDB;
+import com.example.sam.tvreminderapp.DB.Table.MovieDB;
 import com.example.sam.tvreminderapp.DB.Table.SeasonDB;
 import com.example.sam.tvreminderapp.DB.Table.TvShowDB;
 import com.example.sam.tvreminderapp.OMDBApiConnection;
@@ -22,6 +24,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.StatementEvent;
+
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
@@ -34,10 +38,14 @@ class MySection extends StatelessSection {
     private ArrayList<Episode> list;
     private int season;
     private JSONArray jsonArray;
-    boolean expanded = true;
-    SectionedRecyclerViewAdapter sectionAdapter;
+    private boolean expanded = true;
+    private SectionedRecyclerViewAdapter sectionAdapter;
+    private TvShowDB tvShowDB;
+    private SeasonDB seasonDB;
+    private EpisodeDB episodeDB;
+    private String idTvShow;
 
-    public MySection(String movieId , final int season, Context context, final SectionedRecyclerViewAdapter sectionAdapter) {
+    public MySection(String idTvShow , final int season, Context context, final SectionedRecyclerViewAdapter sectionAdapter) {
         // call constructor with layout resources for this Section header and items
         super(new SectionParameters.Builder(R.layout.section_item)
                 .headerResourceId(R.layout.section_header)
@@ -45,12 +53,15 @@ class MySection extends StatelessSection {
         this.season=season;
         list = new ArrayList<>();
         this.sectionAdapter = sectionAdapter;
+        this.idTvShow = idTvShow;
 
-        TvShowDB tvShowDB = new TvShowDB(context);
-        TvShow tvShow = tvShowDB.getTvShowByIdOMDB(movieId);
+        tvShowDB = new TvShowDB(context);
+        seasonDB = new SeasonDB(context);
+        episodeDB = new EpisodeDB(context);
+        TvShow tvShow = tvShowDB.getTvShowByIdOMDB(idTvShow);
 
         if(tvShow == null) {
-            OMDBApiConnection.getSeasonDetail(movieId, season, context, new OMDBApiConnection.VolleyCallbackObject() {
+            OMDBApiConnection.getSeasonDetail(idTvShow, season, context, new OMDBApiConnection.VolleyCallbackObject() {
                 @Override
                 public JSONObject onSuccess(JSONObject result) {
                     try {
@@ -71,9 +82,7 @@ class MySection extends StatelessSection {
             });
         }
         else {
-            SeasonDB seasonDB = new SeasonDB(context);
-            EpisodeDB episodeDB = new EpisodeDB(context);
-            episodeDB.allEpisodeFromSeason(list, seasonDB.getSeasonByIdTvShow(tvShowDB.getTvShowByIdOMDB(movieId).getId(), season).getId(), season);
+            episodeDB.allEpisodeFromSeason(list, seasonDB.getSeasonByIdTvShow(tvShowDB.getTvShowByIdOMDB(idTvShow).getId(), season).getId(), season);
             sectionAdapter.notifyDataSetChanged();
         }
 
@@ -91,11 +100,21 @@ class MySection extends StatelessSection {
     }
 
     @Override
-    public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindItemViewHolder(RecyclerView.ViewHolder holder, final int position) {
         MyItemViewHolder itemHolder = (MyItemViewHolder) holder;
-
         // bind your view here
         itemHolder.tvItem.setText(list.get(position).getTitle());
+        itemHolder.seen.setChecked(list.get(position).isSeen());
+        itemHolder.seen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] values = new String[1];
+                String[] params = new String[1];
+                params[0] = "seen";
+                values[0] = String.valueOf(((CheckBox) view).isChecked() ? 1 : 0);
+                episodeDB.update(list.get(position).getId(), params, values);
+            }
+        });
     }
 
     @Override
@@ -107,6 +126,17 @@ class MySection extends StatelessSection {
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         final HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.tvTitle.setText("Season "+season);
+        headerHolder.seen.setChecked(seasonDB.isSeen(idTvShow, season));
+        headerHolder.seen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                seasonDB.setSeasonSeen(idTvShow, season, ((CheckBox) view).isChecked() ? 1 : 0);
+                list.clear();
+                episodeDB.allEpisodeFromSeason(list, seasonDB.getSeasonByIdTvShow(tvShowDB.getTvShowByIdOMDB(idTvShow).getId(), season).getId(), season);
+                sectionAdapter.notifyDataSetChanged();
+            }
+        });
+
         headerHolder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,12 +154,14 @@ class MySection extends StatelessSection {
         private final TextView tvTitle;
         public View rootView;
         private final ImageView imgArrow;
+        private final CheckBox seen;
 
         HeaderViewHolder(View view) {
             super(view);
             rootView = view;
             tvTitle = (TextView) view.findViewById(R.id.tvTitle);
             imgArrow = (ImageView) view.findViewById(R.id.imgArrow);
+            seen = (CheckBox) view.findViewById(R.id.checkbox_season);
         }
     }
 }

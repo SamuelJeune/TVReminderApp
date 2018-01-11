@@ -95,14 +95,14 @@ public class EpisodeDB extends TableObject {
         this.close();
     }
 
-    public void update(int idMovie, String[] keys, String[] params) {
+    public void update(long idEpisode, String[] keys, String[] params) {
         this.open();
         ContentValues contentValues = new ContentValues();
 
         for(int i = 0; i < params.length; i++)
             contentValues.put(keys[i], params[i]);
 
-        mDb.update(TABLE_NAME, contentValues, "id = " + idMovie, null);
+        mDb.update(TABLE_NAME, contentValues, "id = " + idEpisode, null);
         this.close();
     }
 

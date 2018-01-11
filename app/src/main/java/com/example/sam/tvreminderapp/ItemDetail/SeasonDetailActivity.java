@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.CheckBox;
 
 import com.example.sam.tvreminderapp.DB.Table.SeasonDB;
 import com.example.sam.tvreminderapp.DB.Table.TvShowDB;
@@ -21,7 +22,8 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapt
 public class SeasonDetailActivity extends AppCompatActivity {
 
     private String itemID;
-    int totalSeasons;
+    private int totalSeasons;
+    private CheckBox checkBoxSeen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class SeasonDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         itemID = intent.getStringExtra("ITEM_ID");
         totalSeasons = intent.getIntExtra("TOTAL_SEASON",0);
+        checkBoxSeen = findViewById(R.id.checkbox_season);
 
         // Create an instance of SectionedRecyclerViewAdapter
         final SectionedRecyclerViewAdapter sectionAdapter = new SectionedRecyclerViewAdapter();
