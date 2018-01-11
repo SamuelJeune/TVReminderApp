@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.example.sam.tvreminderapp.DB.TableObject;
+import com.example.sam.tvreminderapp.Object.Episode;
+import com.example.sam.tvreminderapp.Object.Season;
 import com.example.sam.tvreminderapp.Object.TvShow;
 
 import java.util.ArrayList;
@@ -131,6 +133,32 @@ public class TvShowDB extends TableObject {
         }
         c.close();
         return tvShow;
+    }
+
+    public void setTvShowSeen(long id, String idOMDB, int seen) {
+        SeasonDB seasonDB = new SeasonDB(context);
+        ArrayList<Season> listSeasons = new ArrayList<>();
+        seasonDB.allSeasonFromTvShow(listSeasons, id);
+
+        for(Season season : listSeasons) {
+            String[] params = new String[1];
+            String[] values = new String[1];
+            params[0] = "seen";
+            values[0] = String.valueOf(seen);
+
+            seasonDB.setSeasonSeen(idOMDB, season.getNumber(), seen);
+        }
+    }
+
+    public boolean isSeen(long id, String idOMDB) {
+        SeasonDB seasonDB = new SeasonDB(context);
+        ArrayList<Season> listSeasons = new ArrayList<>();
+        seasonDB.allSeasonFromTvShow(listSeasons, id);
+
+        for(Season season : listSeasons) {
+            if(!seasonDB.isSeen(idOMDB, season.getNumber())) return false;
+        }
+        return true;
     }
 
     public TvShow getTvShowByIdOMDB(String id) {

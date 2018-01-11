@@ -161,7 +161,7 @@ public class SeasonDB extends TableObject {
         return season;
     }
 
-    public ArrayList<Season> allSeasonFromTvShow(ArrayList<Season> list, int idTvShow) {
+    public ArrayList<Season> allSeasonFromTvShow(ArrayList<Season> list, long idTvShow) {
         //Lecture
         mDb = this.read();
 

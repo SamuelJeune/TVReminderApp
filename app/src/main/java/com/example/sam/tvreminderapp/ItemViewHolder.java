@@ -7,8 +7,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sam.tvreminderapp.DB.Table.MovieDB;
+import com.example.sam.tvreminderapp.DB.Table.TvShowDB;
 import com.example.sam.tvreminderapp.Object.Item;
 import com.example.sam.tvreminderapp.Object.Movie;
+import com.example.sam.tvreminderapp.Object.TvShow;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -85,6 +87,21 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             });
         }
         else if(item.getType() == "series") {
+            final TvShow tvShow = (TvShow) item;
+            final TvShowDB tvShowDB = new TvShowDB(view.getContext());
+            if(tvShowDB.isSeen(tvShow.getId(), tvShow.getIdOMDB())){
+                seenBox.setChecked(true);
+            }else{
+                seenBox.setChecked(false);
+            }
+
+            seenBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tvShowDB.setTvShowSeen(tvShow.getId(), tvShow.getIdOMDB(), ((CheckBox) v).isChecked() ? 1 : 0);
+                }
+            });
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
